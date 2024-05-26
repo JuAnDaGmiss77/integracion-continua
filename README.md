@@ -17,6 +17,10 @@ emplea una de las herramientas más valiosas para la integración continua: Dock
 entre sí.
 </p>
 
+<p>
+La integración continua es un proceso fundamental en el desarrollo de software moderno que permite a los equipos trabajar de manera colaborativa y eficiente. Al dividir el proyecto en entregas semanales, se fomenta la práctica de integrar y probar cambios en el código de manera regular. Esto no solo garantiza la detección temprana de errores, sino que también facilita la implementación de nuevas funcionalidades de forma más ágil y segura. El uso de herramientas como Docker, Github, Jenkins y Travis CI proporciona un entorno automatizado y controlado, lo que permite construir, probar y desplegar el software de manera consistente y reproducible. Esta práctica no solo mejora la calidad del software, sino que también aumenta la confianza del equipo y la satisfacción del cliente al ofrecer productos más estables y de mayor calidad en un tiempo más corto.
+</p>
+
 INTEGRANTES DEL GRUPO: 
 
 ID  | INTEGRANTES
