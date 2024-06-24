@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'python:3.11.4-slim-buster'
+            image 'python:3.11.4-slim-buster' //image
             args '-u root'
             reuseNode true
         }
