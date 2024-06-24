@@ -2,6 +2,13 @@ pipeline {
     agent any
 
     stages {
+        stage('Check Docker and Docker Compose') {
+            steps {
+                sh 'docker --version'
+                sh 'docker-compose --version'
+            }
+        }
+        
         stage('Checkout') {
             steps {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/JuAnDaGmiss77/integracion-continua.git']])
