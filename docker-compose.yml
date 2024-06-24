@@ -20,5 +20,15 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=cidb
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    ports:
+      - 8080:8080
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
 volumes:
   postgres_data:
+  jenkins_home:
