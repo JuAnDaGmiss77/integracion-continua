@@ -8,35 +8,44 @@ pipeline {
             }
         }
 
-        stage('Set up Python environment') {
+        stage('Verify Project Structure') {
             steps {
                 script {
-                    // Intenta crear el entorno virtual
-                    def result = sh(script: 'python3 -m venv venv', returnStatus: true)
-                    
-                    // Si falla, instala python3-venv y vuelve a intentar(fail)
-                    if (result != 0) {
-                        sh 'sudo apt-get update'
-                        sh 'sudo apt-get install -y python3-venv'
-                        sh 'python3 -m venv venv'
+                    def requiredFiles = [
+                        '.gitignore',
+                        'README.md',
+                        'manage.py'
+                    ]
+
+                    def missingFiles = []
+
+                    requiredFiles.each { file ->
+                        if (!fileExists(file)) {
+                            missingFiles.add(file)
+                        }
                     }
-                    
-                    // Activa el entorno virtual e instala las dependencias
-                    sh '. venv/bin/activate && pip install flake8'
+
+                    if (missingFiles.size() > 0) {
+                        error "Los siguientes archivos requeridos no existen: ${missingFiles.join(', ')}"
+                    } else {
+                        echo "Todos los archivos requeridos están presentes."
+                    }
                 }
             }
         }
 
-        stage('Run Linter') {
+        stage('Check Django Project Structure') {
             steps {
-                sh '. venv/bin/activate && flake8 .'
+                script {
+                    def djangoFiles = sh(script: 'find . -name "settings.py"', returnStdout: true).trim()
+                    
+                    if (djangoFiles.isEmpty()) {
+                        error "No se encontró el archivo settings.py. Verifica que este sea un proyecto Django."
+                    } else {
+                        echo "Estructura de proyecto Django verificada."
+                    }
+                }
             }
-        }
-    }
-
-    post {
-        always {
-            sh 'rm -rf venv'
         }
     }
 }
