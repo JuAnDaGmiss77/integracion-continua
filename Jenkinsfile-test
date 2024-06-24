@@ -1,68 +1,31 @@
 pipeline {
     agent any
-    
-    environment {
-        DEBUG = '1'
-        SECRET_KEY = credentials('django-secret-key')
-        DATABASE = 'postgres'
-        DB_NAME = credentials('db-name')
-        DB_USER = credentials('db-user')
-        DB_PASSWORD = credentials('db-password')
-        DB_HOST = credentials('db-host')
-        DB_PORT = '5432'
-    }
-    
+
     stages {
-        stage('Check Docker and Docker Compose') {
-            steps {
-                sh 'docker --version'
-                sh 'docker-compose --version'
-            }
-        }
-        
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        
-        stage('Prepare Environment') {
+
+        stage('Set up Python environment') {
             steps {
-                script {
-                    // Crear el archivo .env.dev con las variables de entorno
-                    def envContent = """
-                    DEBUG=${DEBUG}
-                    SECRET_KEY=${SECRET_KEY}
-                    DATABASE=${DATABASE}
-                    DB_NAME=${DB_NAME}
-                    DB_USER=${DB_USER}
-                    DB_PASSWORD=${DB_PASSWORD}
-                    DB_HOST=${DB_HOST}
-                    DB_PORT=${DB_PORT}
-                    """
-                    writeFile file: '.env.dev', text: envContent
-                    echo '.env.dev file created'
-                }
+                sh 'python3 -m venv venv'
+                sh '. venv/bin/activate'
+                sh 'pip install flake8'
             }
         }
-        
-        stage('Build') {
+
+        stage('Run Linter') {
             steps {
-                sh 'docker-compose build'
-            }
-        }
-        
-        stage('Run Tests') {
-            steps {
-                sh 'docker-compose run --rm web python manage.py test'
+                sh '. venv/bin/activate && flake8 .'
             }
         }
     }
-    
+
     post {
         always {
-            sh 'docker-compose down'
-            sh 'rm -f .env.dev'
+            sh 'rm -rf venv'
         }
     }
 }
