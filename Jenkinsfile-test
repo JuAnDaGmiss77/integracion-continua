@@ -14,7 +14,7 @@ pipeline {
                     // Intenta crear el entorno virtual
                     def result = sh(script: 'python3 -m venv venv', returnStatus: true)
                     
-                    // Si falla, instala python3-venv y vuelve a intentar
+                    // Si falla, instala python3-venv y vuelve a intentar(fail)
                     if (result != 0) {
                         sh 'sudo apt-get update'
                         sh 'sudo apt-get install -y python3-venv'
