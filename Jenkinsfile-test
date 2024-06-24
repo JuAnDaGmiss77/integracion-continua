@@ -1,0 +1,36 @@
+pipeline {
+    agent {
+        docker {
+            image 'python:3.11.4-slim-buster'
+            args '-u root'
+            reuseNode true
+        }
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Setup') {
+            steps {
+                sh 'pip install --upgrade pip'
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        
+        stage('Run Tests') {
+            steps {
+                sh 'python manage.py test'
+            }
+        }
+    }
+    
+    post {
+        always {
+            sh 'echo "Tests completados"'
+        }
+    }
+}
